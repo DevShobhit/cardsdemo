@@ -1,58 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import React from 'react'
+import Home from './pages/home'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { Result, Button } from 'antd'
+import CardGrid from './components/listngrids/cardgrid'
+import History from './pages/history'
+import NotFound from './pages/404'
 
 function App() {
+  const cards = useSelector((state) => state.cards)
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+    <div className='App'>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<Home />}>
+            <Route
+              path='/'
+              element={
+                cards.error ? (
+                  <Result
+                    status='warning'
+                    title='There are some problems with your connection.'
+                    extra={
+                      <Button
+                        type='primary'
+                        key='reload'
+                        onClick={() => window.location.reload()}
+                      >
+                        Try Again
+                      </Button>
+                    }
+                  />
+                ) : (
+                  <CardGrid />
+                )
+              }
+            />
+            <Route path='history' element={<History />}></Route>
+          </Route>
+          <Route path='*' element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
